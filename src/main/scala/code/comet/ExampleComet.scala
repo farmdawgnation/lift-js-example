@@ -32,8 +32,8 @@ class ExampleComet extends CometActor {
   override def defaultPrefix = Full("comet")
   
   def triggerBadJavascript(s:String) = {
-    BadJs("This line won't transmit with a semicolon.") &
-    BadJs("This line will transmit with a semicolon.")
+    BadJs("This line will transmit without a semicolon.") &
+    BadJs("This line will transmit without a semicolon.")
   }
   
   override def render = TriggerBadJavascript(triggerBadJavascript)
