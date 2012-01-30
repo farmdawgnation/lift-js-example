@@ -32,6 +32,8 @@ This will trigger an AJAX request that will return two alert commands back to th
 
 ## Our Investigation
 
+The bulk of the interesting portions of this code are in [ExampleComet.scala](https://github.com/mfoxtrot/lift-js-example/blob/master/src/main/scala/code/comet/ExampleComet.scala)
+
 On [line 197 of JsCmds.scala](https://github.com/lift/framework/blob/master/web/webkit/src/main/scala/net/liftweb/http/js/JsCommands.scala#L197)
 semicolons are manually added onto the end of the toJsCmd vals.
 
