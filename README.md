@@ -4,9 +4,16 @@ This project demonstrates behavior we've observed where we had expected Lift to 
 with some custom JsCmds, and it did not. This may not be unintended behavior, but it wasn't something
 we expected - so this might be a case where some added documentation or the like may be appropriate.
 
+Most browsers don't seem to notice the difference, but in jQuery 1.7 the implementation of globalEval 
+was changed for Internet Explorer. IE9+ appears to handle multiple lines without semicolons just fine,
+as it is valid JavaScript, yet IE8 chokes and throws errors.
+
+So, if you're having problems with IE8 not liking JavaScript you send down via a `partialUpdate()`, there's
+a good chance you're doing something like this in your project.
+
 ## Running this Project
 
-This project was built with SBT 0.7.
+This project was built with Lift 2.4 final and SBT 0.7.
 
 As expected, updating the internal sbt goodness is doable with `sbt update` and to build and run the project, 
 simply run `sbt compile && sbt` and then `jetty-run` at the prompt. Navigate to localhost:8080 and open up
@@ -42,3 +49,4 @@ And changing it to this eradicates the bug:
 ```scala
 val toJsCmd = Call("alert", text).cmd.toJsCmd
 ```
+
