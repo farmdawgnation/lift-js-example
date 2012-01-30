@@ -2,6 +2,7 @@ package code
 package comet
 
 import net.liftweb._
+  import common._
   import http._
     import js._
       import JE._
@@ -23,19 +24,26 @@ case class TriggerBadJavascript(callback:(String)=>JsCmd) extends JsCmd {
 case object Message
 
 class ExampleComet extends CometActor {
+  
+  override def defaultPrefix = Full("comet")
+  
   def triggerBadJavascript(s:String) = {
     Call("alert", "This line won't transmit with a semicolon.") &
     Call("alert", "This line will transmit with a semicolon.")
   }
   
-  override def render = bind("message" -> <span id="message">Whatever you feel like returning</span>)
+  override def render = Noop
   
-  ActorPing.schedule(this, Message, 10000L)
+  override def localSetup = {
+    println("COMET SETUP")
+    Schedule.schedule(this, Message, 5000L)
+  }
   
   override def lowPriority = {
     case Message => {
       println("HAI")
-      ActorPing.schedule(this, Message, 10000L)
+      partialUpdate(TriggerBadJavascript(triggerBadJavascript))
+      Schedule.schedule(this, Message, 5000L)
     }
   }
 }
