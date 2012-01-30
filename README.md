@@ -1,15 +1,15 @@
 # Semicolons Gone Missing
 
-This project demonstrates behavior we've observed where we had expected Lift to send down semicolons
+This project demonstrates behavior we've observed where we expected Lift to send down semicolons
 with some custom JsCmds, and it did not. This may not be unintended behavior, but it wasn't something
 we expected - so this might be a case where some added documentation or the like may be appropriate.
 
-Most browsers don't seem to notice the difference, but in jQuery 1.7 the implementation of globalEval 
+Most browsers don't seem to notice the difference, but in jQuery 1.6+ the implementation of globalEval 
 was changed for Internet Explorer. IE9+ appears to handle multiple lines without semicolons just fine,
-as it is valid JavaScript, yet IE8 chokes and throws errors.
+as it is valid JavaScript, however IE8 chokes and throws errors.
 
-So, if you're having problems with IE8 not liking JavaScript you send down via a `partialUpdate()`, there's
-a good chance you're doing something like this in your project.
+So, if you're having problems with IE8 not liking JavaScript you send down via a `partialUpdate()`, and
+you're running jQuery >= 1.6 there's a good chance you're doing something like this in your project.
 
 ## Running this Project
 
@@ -27,8 +27,8 @@ console type the following command and press enter:
 triggerBadJavascript();
 ```
 
-This will trigger an AJAX request that will return two alert commands back to the browser, both lacking a semicolon
-on the end of the line. You'll be able to view the returned content in the network tab.
+This will trigger an AJAX request that will return two alert commands back to the browser, one called via our
+`BadJs` class, and one called via our `GoodJs` class.
 
 ## Our Investigation
 
@@ -38,13 +38,13 @@ semicolons are manually added onto the end of the toJsCmd vals.
 We've determined that when we implement custom JsCmds such as BadJs in this example project, we can avoid running into
 semicolon issues by changing our toJsCmd val to call the `cmd` method first.
 
-So, in our project we have this line in BadJs:
+So, in our project we have this line in `BadJs`:
 
 ```scala
 val toJsCmd = Call("alert", text).toJsCmd
 ```
 
-And changing it to this eradicates the bug:
+And changing it to this eradicates the issue, thereby creating the variation we termed `GoodJs`:
 
 ```scala
 val toJsCmd = Call("alert", text).cmd.toJsCmd

@@ -25,6 +25,10 @@ case class BadJs(text:String) extends JsCmd {
   val toJsCmd = Call("alert", text).toJsCmd
 }
 
+case class GoodJs(text:String) extends JsCmd {
+  val toJsCmd = Call("alert", text).cmd.toJsCmd
+}
+
 case object Message
 
 class ExampleComet extends CometActor {
@@ -33,7 +37,7 @@ class ExampleComet extends CometActor {
   
   def triggerBadJavascript(s:String) = {
     BadJs("This line will transmit without a semicolon.") &
-    BadJs("This line will transmit without a semicolon.")
+    GoodJs("This line will transmit *with* a semicolon.")
   }
   
   override def render = TriggerBadJavascript(triggerBadJavascript)
